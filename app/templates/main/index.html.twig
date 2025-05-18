@@ -3,5 +3,9 @@
 {% block title %}Acceuil{% endblock %}
 
 {% block body %}
-    <h1>Hello {{ prenom }}</h1>
+    {% if app.user %}
+        <h1>Hello {{ app.user.userIdentifier }}</h1>
+    {% else %}
+        <h1>Hello {{ user }}</h1>
+    {% endif %}
 {% endblock %}
