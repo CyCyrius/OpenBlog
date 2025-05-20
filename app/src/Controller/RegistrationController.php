@@ -54,7 +54,7 @@ class RegistrationController extends AbstractController
             $mail->send(
                 'no-reply@openblog.fr',
                 $user->getEmail(),
-                'Activation de votre compte',
+                'Activation de votre compte sur le site OpenBlog',
                 'register',
                 compact('user', 'token') //['user'=>$user, 'token'=>$token]
             );
@@ -72,16 +72,16 @@ class RegistrationController extends AbstractController
     #[Route('/verify/{token}', name: 'app_verify_user')]
     public function verifUser($token, JWTService $jwt, UsersRepository $usersRepository, EntityManagerInterface $em):Response 
     {
-        //Verif validité (cohérent/expiration/signature)
+        // Verif validité (cohérent/expiration/signature)
         if($jwt->isValid($token) && !$jwt->isExpired($token) && $jwt->check($token, $this->getParameter('app.jwtsecret'))){
-            //token valide recup données (payload)
+            // token valide recup données (payload)
             $payload = $jwt->getPayload($token);
-            // dd($payload);
+            //dd($payload);
 
-            //On recup le user
+            // On recup le user
             $user = $usersRepository->find($payload['user_id']);
 
-            //Verif user et pas deja activé
+            // Verif user et pas deja activé
             if($user && !$user->isVerified()){
                 $user->setIsVerified(true);
                 $em->flush();
